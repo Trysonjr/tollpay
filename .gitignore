@@ -1,0 +1,6 @@
+*.zip
+*.bak
+*.bak2
+*.bak3
+.DS_Store
+Thumbs.db

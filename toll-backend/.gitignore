@@ -1,0 +1,13 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Env & secrets
+.env
+
+# Local DB / dev artifacts
+edge_queue.db
+edge_cache.json
+*.log

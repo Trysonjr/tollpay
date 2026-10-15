@@ -1,0 +1,167 @@
+/* =====================================================================
+   nav-fix.css — single source of truth for navigation & responsiveness.
+   Imported AFTER index.css (see main.jsx), so these rules win.
+   ===================================================================== */
+
+/* ---------- hamburger (48x48 target, labeled) ---------- */
+.hamburger {
+  display: none;
+  min-width: 48px; min-height: 48px;
+  align-items: center; justify-content: center; gap: 7px;
+  background: none; border: none; cursor: pointer;
+  color: var(--text); border-radius: 12px; padding: 0 12px;
+}
+.hamburger .menu-label { font-size: 13px; font-weight: 700; white-space: nowrap; }
+.hamburger .menu-icon { font-size: 20px; line-height: 1; }
+
+/* ---------- vertical drawer (slides DOWN on the Y axis) ---------- */
+.vdrawer {
+  position: fixed; left: 0; right: 0; top: 0; z-index: 97;
+  padding-top: 56px;
+  background: var(--surface);
+  border-radius: 0 0 18px 18px;
+  box-shadow: 0 10px 36px rgba(5, 43, 19, 0.28);
+  padding-left: 10px; padding-right: 10px; padding-bottom: 14px;
+  transform: translateY(-130%);
+  transition: transform 0.25s ease;
+  max-height: 100dvh;
+  overflow-y: auto;
+  visibility: hidden;
+}
+.vdrawer.open { transform: translateY(0); visibility: visible; }
+.vdrawer a, .vdrawer-link-danger {
+  display: flex; align-items: center; gap: 14px;
+  min-height: 52px; padding: 10px 14px; border-radius: 12px;
+  text-decoration: none; color: var(--text);
+  font-weight: 700; font-size: 15.5px;
+  background: none; border: none; font-family: inherit; cursor: pointer;
+  text-align: left; width: 100%;
+}
+.vdrawer a.active { background: var(--primary); color: #fff; }
+.vdrawer-link-danger { color: var(--error); }
+.vdrawer-icon { font-size: 19px; flex-shrink: 0; }
+.vdrawer-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vdrawer-head { display: flex; align-items: center; gap: 12px; padding: 10px 14px 14px; }
+.vdrawer-name { min-width: 0; }
+.vdrawer-name strong { display: block; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vdrawer-name small { color: var(--text-muted); font-size: 12.5px; }
+.vdrawer-sep { height: 1px; background: #D9E6DC; margin: 8px 6px; }
+.vdrawer-close {
+  margin-left: auto; min-width: 48px; min-height: 48px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: none; border: none; border-radius: 12px;
+  font-size: 19px; color: var(--text-muted); cursor: pointer;
+}
+.vdrawer-scrim {
+  position: fixed; inset: 0; z-index: 96;
+  background: rgba(5, 43, 19, 0.45);
+  animation: navfix-fade 0.2s;
+}
+@keyframes navfix-fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------- bottom tab bar ---------- */
+.bottom-tabs {
+  display: none;
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 90;
+  background: var(--surface);
+  border-top: 1px solid #D9E6DC;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-shadow: 0 -6px 20px rgba(5, 43, 19, 0.08);
+}
+.bottom-tabs a {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 9px 4px 10px; text-decoration: none; color: var(--text-muted);
+  font-weight: 700; font-size: 11.5px; min-height: 56px;
+}
+.bottom-tabs a.active { color: var(--primary); }
+.bottom-tabs .tab-icon { font-size: 21px; line-height: 1; }
+.bottom-tabs .tab-label { white-space: nowrap; }
+
+/* ---------- admin mobile bar (hidden on desktop) ---------- */
+.admin-mobile-bar { display: none; }
+
+/* ---------- admin grid hardening ---------- */
+.admin-shell {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+}
+.admin-side { grid-column: 1; grid-row: 1; }
+.admin-main { grid-column: 2; grid-row: 1; min-width: 0; }
+
+/* =====================================================================
+   BREAKPOINTS — orientation-aware: watch width AND height so the
+   layout reflows correctly when the phone rotates either way.
+   ===================================================================== */
+
+/* ---- ADMIN: tablets, phones, AND short landscape screens ---- */
+@media (max-width: 940px), (max-height: 520px) {
+  .admin-shell { grid-template-columns: 1fr; }
+  .admin-side { display: none; }
+  .admin-mobile-bar {
+    display: flex;
+    align-items: center; gap: 14px; padding: 4px 12px;
+    background: var(--surface);
+    border-bottom: 1px solid #D9E6DC;
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 92;
+  }
+  .admin-mobile-bar .hamburger { display: inline-flex; }
+  .admin-shell { padding-top: 56px; }
+  .admin-main { grid-column: 1; grid-row: 1; padding: 16px 14px 48px; }
+}
+
+/* ---- MOTORIST: phones (portrait small OR landscape short) ---- */
+@media (max-width: 700px), (max-height: 520px) {
+  .appbar-links { display: none; }
+  .appbar-logout { display: none; }
+  .appbar-name { display: none; }
+  .hamburger { display: inline-flex; }
+  .bottom-tabs { display: flex; }
+  .app-main { padding-bottom: 88px; }
+}
+
+/* ---- ROTATED PHONES (landscape): compact chrome ---- */
+@media (orientation: landscape) and (max-height: 520px) {
+  .appbar-inner { padding: 6px 14px; }
+  .vdrawer a, .vdrawer-link-danger { min-height: 44px; padding: 8px 12px; font-size: 14.5px; }
+  .bottom-tabs a { min-height: 40px; padding: 4px 4px 5px; }
+  .bottom-tabs .tab-icon { font-size: 16px; }
+  .bottom-tabs .tab-label { font-size: 10px; }
+  .app-main { padding-bottom: 58px; }
+  .cg-road { height: 150px; }
+  .cg-arm { width: 105px; }
+  .cg-tlight { right: 150px; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .dash-grid { grid-template-columns: 1fr; }
+}
+
+/* =====================================================================
+   TABLES & PANELS — full-width stretch, scroll INSIDE the panel
+   ===================================================================== */
+
+.tbl-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+.panel { width: 100%; max-width: 100%; }
+.admin-main, .app-main, .cg-wrap { width: 100%; max-width: 100%; }
+.admin-main { max-width: 1160px; }
+.app-main { max-width: 1200px; }
+.cg-wrap { max-width: 1200px; }
+
+/* tables fill the panel; wide data scrolls inside, page never stretches */
+.panel .tbl { width: 100%; min-width: 640px; }
+/* =====================================================================
+   TABLE PANEL FIX — background travels with the table, never ends early
+   ===================================================================== */
+
+/* any panel containing a data table scrolls INSIDE itself:
+   the white background stays with the columns as you swipe */
+.panel:has(table.tbl) { overflow-x: auto; }
+
+/* and the page itself never scrolls sideways anymore */
+html, body { overflow-x: hidden; overflow-x: clip; }
